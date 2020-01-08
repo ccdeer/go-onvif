@@ -67,7 +67,6 @@ func (soap *SOAP) SendRequest(xaddr string) (mxj.Map, error) {
 		return nil, err
 	}
 	Debugf("[<<<%s]%s", xaddr, string(responseBody))
-	fmt.Printf("[<<<%s]%s", xaddr, string(responseBody))
 
 	if resp.StatusCode != 200 {
 
