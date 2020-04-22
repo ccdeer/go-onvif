@@ -444,6 +444,7 @@ func (device *Device) SetVideoEncoderConfiguration(config VideoEncoderConfig) er
 }
 
 func (device *Device) SetAudioEncoderConfiguration(config AudioEncoderConfig) error {
+    var extraObj string
 	var soap SOAP
 	// Create SOAP
 	soap = SOAP{
@@ -451,11 +452,18 @@ func (device *Device) SetAudioEncoderConfiguration(config AudioEncoderConfig) er
 		User:     device.User,
 		Password: device.Password,
 	}
+
+    if config.Encoding == "AAC" {
+        extraObj = `<Bitrate xmlns="http://www.onvif.org/ver10/schema">` + config.Bitrate + `</Bitrate>
+                    <SampleRate xmlns="http://www.onvif.org/ver10/schema">` + config.SampleRate + `</SampleRate>`
+    }
+
 	soap.Body = `<SetAudioEncoderConfiguration xmlns="http://www.onvif.org/ver20/media/wsdl">
       <Configuration token="MainAudioEncoderToken">
         <Name xmlns="http://www.onvif.org/ver10/schema">` + config.Name + `</Name>
         <UseCount xmlns="http://www.onvif.org/ver10/schema">2</UseCount>
         <Encoding xmlns="http://www.onvif.org/ver10/schema">` + config.Encoding + `</Encoding>
+        ` + extraObj + `
         <Multicast xmlns="http://www.onvif.org/ver10/schema">
           <Address>
             <Type>IPv4</Type>
